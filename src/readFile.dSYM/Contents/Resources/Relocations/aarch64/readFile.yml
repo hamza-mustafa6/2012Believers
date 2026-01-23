@@ -1,0 +1,5 @@
+---
+triple:          'arm64-apple-darwin'
+binary-path:     '/Users/hamzamustafa/Desktop/GameEngineDesign/2012Believers/src/readFile'
+relocations:     []
+...
