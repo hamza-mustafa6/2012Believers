@@ -1,4 +1,4 @@
-#include <SFML/Graphics.hpp>
+#include "Shape.cpp"
 
 /*
     TO RUN:
@@ -9,8 +9,11 @@
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(640, 480), "First Window");
+    sf::RenderWindow window(sf::VideoMode(900, 720), "Game 01");
     window.setFramerateLimit(60);
+
+    Shape rect1(sf::Vector2f(100, 100), sf::Vector2i(1, 1), sf::Color::Red, sf::Vector2f(40, 50));
+    Shape circ1(sf::Vector2f(120, 120), sf::Vector2i(3, 3), sf::Color::Blue, 20);
 
     while(window.isOpen())
     {
@@ -25,9 +28,14 @@ int main()
             }
         }
 
-        window.clear(sf::Color::Red);
+        rect1.Update(window);
+        circ1.Update(window);
+
+        window.clear();
 
         // Draw here
+        rect1.Render(window);
+        circ1.Render(window);
         
         window.display();
     }
