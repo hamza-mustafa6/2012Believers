@@ -7,30 +7,33 @@ enum class ShapeType { RECTANGLE, CIRCLE };
 class Shape
 {  
     public:
-    Shape(sf::Vector2f l_position, sf::Vector2i l_speed, 
+
+    Shape(std::string l_name, sf::Vector2f l_position, sf::Vector2f l_speed, 
           sf::Color l_color, sf::Vector2f l_size);
-    Shape(sf::Vector2f l_position, sf::Vector2i l_speed,
+    Shape(std::string l_name, sf::Vector2f l_position, sf::Vector2f l_speed,
           sf::Color l_color, float l_radius);
     ~Shape();
 
-    void Setup(sf::Vector2f l_position, sf::Vector2i l_speed, sf::Color l_color);
-    void CreateText(sf::Font l_font, sf::Text l_content, int l_fontSize, sf::Color l_fontColor);
+    static void SetupText(sf::Font& l_font, sf::Color l_color, int l_size);
 
     void Update(sf::RenderWindow& l_window);
     void Render(sf::RenderWindow& l_window);
+
     private:
 
+    static sf::Font s_font; // Static font
+    static sf::Color s_textColor; // Static text color
+    static int s_fontSize; // Static font size
+
     ShapeType m_shapeType; // Type of shape
-    sf::Vector2i m_speed; // Shape Speed
+    sf::Vector2f m_speed; // Shape Speed
 
-    sf::Font m_font; // Font
     sf::Text m_content; // Text
-    int m_fontSize; // Size of text
-    sf::Color m_fontColor; // Color of text
 
-    sf::CircleShape m_circle;
-    sf::RectangleShape m_rect;
+    sf::CircleShape m_circle; // Circle drawable object
+    sf::RectangleShape m_rect; // Rectangle Drawable object
 
     void UpdateCircle(sf::Vector2u l_windowSize);
+    void CreateText(std::string l_string);
 
 };
