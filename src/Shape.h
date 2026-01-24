@@ -1,8 +1,6 @@
 #include <SFML/Graphics.hpp>
 
-enum class ShapeType { RECTANGLE, CIRCLE };
-
-// TODO: The class needs access to creating fonts and whatnot
+enum class ShapeType { RECTANGLE, CIRCLE }; // Enum class for shape type flags
 
 class Shape
 {  

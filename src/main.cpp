@@ -1,4 +1,7 @@
 #include "Shape.cpp"
+#include <fstream>
+#include <iostream>
+#include <sstream>
 
 /*
     TO RUN:
@@ -7,32 +10,106 @@
     > ./build/bin/main
 */
 
+using ShapeList = std::vector<Shape>;
+
 int main()
 {
-
     // Main class variables
-    sf::Vector2u windowSize(800, 600);
+    sf::Vector2u windowSize;
 
     sf::Font font;
-    sf::Color textColor = sf::Color(255, 255, 255);
-    int fontSize = 18;
+    sf::Color textColor;
+    int fontSize;
+
+    ShapeList shapeList;
+
+    std::ifstream readConfig("./src/config.txt");
+    std::string buffer;
+
+    if (!readConfig.is_open())
+    {
+        std::cerr << "Could not open file.\n";
+        return -1;
+    }
+
+    // File reading
+    while (std::getline(readConfig, buffer))
+    {
+        // Skip if line is empty or contains only one character
+        if (buffer.empty() || buffer.size() == 1)
+        {
+            continue;
+        }
+
+        // Skip if line is a comment
+        if (buffer[0] == '/' && buffer[1] == '/')
+        {
+            continue;
+        }
+
+        std::stringstream readLine(buffer);
+        std::string readWord;
+
+        unsigned int windX, windY; // Window size
+
+        std::string fontFile; // font file name
+        int textR, textG, textB; // text color values
+        int fileFontSize; // font size
+
+        std::string name; // Shape name
+        float posX, posY; // Shape position
+        float speedX, speedY; // Shape speed
+        int shapeR, shapeG, shapeB; // Shape color values
+        float sizeX, sizeY, radius; // Shape width, height, and radius
+
+        readLine >> readWord;
+
+        // Assign variables for window params
+        if (readWord == "Window")
+        {
+            readLine >> windX >> windY;
+            windowSize = sf::Vector2u(windX, windY);
+        }
+
+        // Assign variables for font params
+        if (readWord == "Font")
+        {
+            readLine >> fontFile >> fileFontSize >> textR >> textG >> textB;
+
+            font.loadFromFile("./src/" + fontFile);
+            fontSize = (int)fileFontSize;
+            textColor = sf::Color((int)textR, (int)textG, (int)textB);
+
+            Shape::SetupText(font, textColor, fontSize);
+        }
+
+        if (readWord == "Circle")
+        {
+            readLine >> name >> posX >> posY >> speedX >> speedY >> shapeR >> shapeG >> shapeB >> radius;
+
+            // push a new circle to the shapeList vector containing the params read from file
+            shapeList.push_back(Shape(name, 
+                                      sf::Vector2f((float)posX, (float)posY), 
+                                      sf::Vector2f((float)speedX, (float)speedY), 
+                                      sf::Color((int)shapeR, (int)shapeG, (int)shapeB), 
+                                      (float)radius));
+        }
+
+        if (readWord == "Rectangle")
+        {
+            readLine >> name >> posX >> posY >> speedX >> speedY >> shapeR >> shapeG >> shapeB >> sizeX >> sizeY;
+            
+            // Push a new rectangle to the shapeList vector containing the params read from file
+            shapeList.push_back(Shape(name,
+                                      sf::Vector2f((float)posX, (float)posY),
+                                      sf::Vector2f((float)speedX, (float)speedY),
+                                      sf::Color((int)shapeR, (int)shapeG, (int)shapeB),
+                                      sf::Vector2f((float)sizeX, (float)sizeY)));
+        }
+    }
 
     sf::RenderWindow window(sf::VideoMode(windowSize.x, windowSize.y), "Game 01");
     window.setFramerateLimit(60);
-
-    font.loadFromFile("./src/montserrat.ttf");
-
-    Shape::SetupText(font, textColor, fontSize);
-
-    // Circles
-    Shape circ1("CirGreen", sf::Vector2f(100, 100), sf::Vector2f(-3, 2), sf::Color(0, 255, 0), 50);
-    Shape circ2("CirBlue", sf::Vector2f(200, 200), sf::Vector2f(2, 4), sf::Color(0, 0, 255), 100);
-    Shape circ3("CirPurple", sf::Vector2f(300, 300), sf::Vector2f(-2, -1), sf::Color(255, 0, 255), 75);
-
-    // Rectangles
-    Shape rect1("RecRed", sf::Vector2f(200, 200), sf::Vector2f(0.1f, 0.15f), sf::Color(255, 0, 0), sf::Vector2f(100, 45));
-    Shape rect2("RecGray", sf::Vector2f(300, 250), sf::Vector2f(-2, 2), sf::Color(100, 100, 100), sf::Vector2f(80, 120));
-    Shape rect3("RecCyan", sf::Vector2f(25, 100), sf::Vector2f(-2, -2), sf::Color(0, 255, 255), sf::Vector2f(100, 100));
     
     while(window.isOpen())
     {
@@ -47,24 +124,19 @@ int main()
             }
         }
 
-        circ1.Update(window);
-        circ2.Update(window);
-        circ3.Update(window);
-
-        rect1.Update(window);
-        rect2.Update(window);
-        rect3.Update(window);
+        // Update all shapes
+        for(int i = 0; i < shapeList.size(); i++)
+        {
+            shapeList[i].Update(window);
+        }
 
         window.clear();
 
-        // Draw here
-        rect1.Render(window);
-        rect2.Render(window);
-        rect3.Render(window);
-
-        circ1.Render(window);
-        circ2.Render(window);
-        circ3.Render(window);
+        // Draw all shapes
+        for(int i = 0; i< shapeList.size(); i++)
+        {
+            shapeList[i].Render(window);
+        }
         
         window.display();
     }

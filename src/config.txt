@@ -1,0 +1,15 @@
+// Window	Width	Height
+Window  800	600
+
+// Font	FileName	Size	R	G	B
+Font    montserrat.ttf	18	255	255	255
+
+// Circle	Name	PosX	PosY	SpeedX	SpeedY	R	G	B	Radius
+Circle	CirGreen	100	100	-3	2	0	255	0	50
+Circle	CirBlue 200	200	2	4	0	0	255	100
+Circle	CirPurple	300	300	-2	-1	255	0	255	75
+
+// Rectangle	Name	PosX	PosY	SpeedX	SpeedY	R	G	B	Width	Height
+Rectangle	RecRed	200	200	0.1	0.15	255	0	0	100	45
+Rectangle	RecGrey	300	250	-2	2	100	100	100	80	120
+Rectangle	RecCyan	25	100	-2	-2	0	255	255	100	100
