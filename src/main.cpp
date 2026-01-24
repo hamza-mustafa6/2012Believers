@@ -13,17 +13,17 @@ enum class ShapeType { RECTANGLE, CIRCLE }; // Enum class for shape type flags
 class Shape
 {  
     public:
-
+    // Constructors and Destructor
     Shape(std::string l_name, sf::Vector2f l_position, sf::Vector2f l_speed, 
           sf::Color l_color, sf::Vector2f l_size);
     Shape(std::string l_name, sf::Vector2f l_position, sf::Vector2f l_speed,
           sf::Color l_color, float l_radius);
     ~Shape();
 
-    static void SetupText(sf::Font& l_font, sf::Color l_color, int l_size);
+    static void SetupText(sf::Font& l_font, sf::Color l_color, int l_size); // Static method to init text params
 
-    void Update(sf::RenderWindow& l_window);
-    void Render(sf::RenderWindow& l_window);
+    void Update(sf::RenderWindow& l_window); // Update shape's position
+    void Render(sf::RenderWindow& l_window); // Draw shape to window
 
     private:
 
@@ -39,8 +39,8 @@ class Shape
     sf::CircleShape m_circle; // Circle drawable object
     sf::RectangleShape m_rect; // Rectangle Drawable object
 
-    void UpdateCircle(sf::Vector2u l_windowSize);
-    void CreateText(std::string l_string);
+    void UpdateCircle(sf::Vector2u l_windowSize); // Same as regular Update method, pertains to circles only
+    void CreateText(std::string l_string); // Sets the text content of the shape label and sets up proper positioning
 
 };
 
@@ -177,6 +177,7 @@ void Shape::Render(sf::RenderWindow& l_window)
         l_window.draw(m_circle);
     }
     
+    // Draw text
     l_window.draw(m_content);
 }
 
@@ -199,9 +200,11 @@ int main()
 
     ShapeList shapeList;
 
+    // TODO: This path will likely need to be changed for turning the project in -----------------------------------------------------------------------------------------
     std::ifstream readConfig("./src/config.txt");
     std::string buffer;
 
+    // Close program if unable to find or open config
     if (!readConfig.is_open())
     {
         std::cerr << "Could not open file.\n";
@@ -223,8 +226,8 @@ int main()
             continue;
         }
 
-        std::stringstream readLine(buffer);
-        std::string readWord;
+        std::stringstream readLine(buffer); // converts buffer line to an output stream
+        std::string readWord; // buffer for output
 
         unsigned int windX, windY; // Window size
 
@@ -238,7 +241,7 @@ int main()
         int shapeR, shapeG, shapeB; // Shape color values
         float sizeX, sizeY, radius; // Shape width, height, and radius
 
-        readLine >> readWord;
+        readLine >> readWord; // Read first word in current line
 
         // Assign variables for window params
         if (readWord == "Window")
@@ -250,12 +253,16 @@ int main()
         // Assign variables for font params
         if (readWord == "Font")
         {
+            // Assign the next words in the line in a sequence to local variables
             readLine >> fontFile >> fileFontSize >> textR >> textG >> textB;
 
+            // Set up font params
+            // TODO: This path will likely need to be changed before turning the project in ---------------------------------------------------------------------------------
             font.loadFromFile("./src/" + fontFile);
             fontSize = (int)fileFontSize;
             textColor = sf::Color((int)textR, (int)textG, (int)textB);
 
+            // Call the Shape class text "constructor" method
             Shape::SetupText(font, textColor, fontSize);
         }
 
@@ -284,9 +291,11 @@ int main()
         }
     }
 
+    // Set up window and framerate
     sf::RenderWindow window(sf::VideoMode(windowSize.x, windowSize.y), "Game 01");
     window.setFramerateLimit(60);
     
+    // Main loop
     while(window.isOpen())
     {
         sf::Event event;
