@@ -98,6 +98,7 @@ void Shape::CreateText(std::string l_name)
     m_content.setFillColor(s_textColor);
     m_content.setString(l_name);
 
+    // Text::getLocalBounds returns a Rectangle object outlining the bounds of the text object's content. We can use this to center its origin as we would a normal rectangle.
     sf::Vector2f l_localBounds(m_content.getLocalBounds().getSize().x, m_content.getLocalBounds().getSize().y);
     m_content.setOrigin(l_localBounds.x / 2, l_localBounds.y / 2);
 }
@@ -263,7 +264,7 @@ int main()
             textColor = sf::Color((int)textR, (int)textG, (int)textB);
 
             // Call the Shape class text "constructor" method
-            Shape::SetupText(font, textColor, fontSize);
+            Shape::SetupText(font, textColor, fontSize); // Almost crashed out because i forgot you need to call this *before* initializing shape objects
         }
 
         if (readWord == "Circle")

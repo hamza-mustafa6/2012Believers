@@ -2,7 +2,7 @@
 Window  800	600
 
 // Font	FileName	Size	R	G	B
-Font    montserrat.ttf	18	255	255	255
+Font    freeSans.ttf	18	255	255	255
 
 // Circle	Name	PosX	PosY	SpeedX	SpeedY	R	G	B	Radius
 Circle	CirGreen	100	100	-3	2	0	255	0	50
