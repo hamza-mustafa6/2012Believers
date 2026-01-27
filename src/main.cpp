@@ -21,6 +21,7 @@ class Shape
     ~Shape();
 
     static void SetupText(sf::Font& l_font, sf::Color l_color, int l_size); // Static method to init text params
+    void UpdateFont();
 
     void Update(sf::RenderWindow& l_window); // Update shape's position
     void Render(sf::RenderWindow& l_window); // Draw shape to window
@@ -103,9 +104,15 @@ void Shape::CreateText(std::string l_name)
     m_content.setOrigin(l_localBounds.x / 2, l_localBounds.y / 2);
 }
 
+void Shape::UpdateFont()
+{
+    CreateText(m_content.getString());
+}
+
 // Update shape and text position
 void Shape::Update(sf::RenderWindow& l_window)
 {
+
     sf::Vector2u l_windowSize = l_window.getSize(); // Get window bounds
 
     // If the shape type is circle, run the private method UpdateCircle() instead.
@@ -142,6 +149,7 @@ void Shape::Update(sf::RenderWindow& l_window)
 // Same as Update() but pertains to circle object.
 void Shape::UpdateCircle(sf::Vector2u l_windowSize)
 {
+
     // If the edge of the circle crosses window bounds, reverse its movement direction on given axis.
     if (m_circle.getPosition().x > l_windowSize.x - m_circle.getRadius() * 2 ||
         m_circle.getPosition().x < 0)
@@ -198,6 +206,7 @@ int main()
     sf::Font font;
     sf::Color textColor;
     int fontSize;
+    bool fontLoadedLast = false; // Flag for if shapes are initialized before the font
 
     ShapeList shapeList;
 
@@ -254,6 +263,12 @@ int main()
         // Assign variables for font params
         if (readWord == "Font")
         {
+
+            // If the list of shapes already has objects in it, then we know the font is being loaded after shapes have been initialized
+            if (shapeList.size() != 0)
+            {
+                fontLoadedLast = true;
+            }
             // Assign the next words in the line in a sequence to local variables
             readLine >> fontFile >> fileFontSize >> textR >> textG >> textB;
 
@@ -291,6 +306,18 @@ int main()
                                       sf::Vector2f((float)sizeX, (float)sizeY)));
         }
     }
+
+    readConfig.close();
+
+    // If the font info was listed after the shape info, each shape needs to have its text reinitialized
+    if (fontLoadedLast)
+    {
+        for(int i = 0; i < shapeList.size(); i++)
+        {
+            shapeList[i].UpdateFont();
+        }
+    }
+    
 
     // Set up window and framerate
     sf::RenderWindow window(sf::VideoMode(windowSize.x, windowSize.y), "Game 01");
