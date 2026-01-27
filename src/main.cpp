@@ -204,7 +204,7 @@ int main()
     sf::Vector2u windowSize;
 
     // TODO: This will likely need to be changed before turning in the project -----------------------------------------------------------
-    std::string filePathPrefix = "./src/"; // Assumed prefix for file loading
+    std::string filePathPrefix = ""; // Assumed prefix for file loading
 
     sf::Font font;
     sf::Color textColor;
@@ -219,7 +219,7 @@ int main()
     // Close program if unable to find or open config
     if (!readConfig.is_open())
     {
-        std::cerr << "Could not open file.\n";
+        std::cerr << "Could not open config file.\n";
         return -1;
     }
 
@@ -275,7 +275,11 @@ int main()
             readLine >> fontFile >> fileFontSize >> textR >> textG >> textB;
 
             // Set up font params
-            font.loadFromFile(filePathPrefix + fontFile);
+            if (!font.loadFromFile(filePathPrefix + fontFile))
+            {
+                std::cout << "Unable to load font";
+                return -1;
+            }
             fontSize = (int)fileFontSize;
             textColor = sf::Color((int)textR, (int)textG, (int)textB);
 
