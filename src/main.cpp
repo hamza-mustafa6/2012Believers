@@ -203,6 +203,9 @@ int main()
     // Main class variables
     sf::Vector2u windowSize;
 
+    // TODO: This will likely need to be changed before turning in the project -----------------------------------------------------------
+    std::string filePathPrefix = "./src/"; // Assumed prefix for file loading
+
     sf::Font font;
     sf::Color textColor;
     int fontSize;
@@ -210,8 +213,7 @@ int main()
 
     ShapeList shapeList;
 
-    // TODO: This path will likely need to be changed for turning the project in -----------------------------------------------------------------------------------------
-    std::ifstream readConfig("./src/config.txt");
+    std::ifstream readConfig(filePathPrefix + "config.txt");
     std::string buffer;
 
     // Close program if unable to find or open config
@@ -273,8 +275,7 @@ int main()
             readLine >> fontFile >> fileFontSize >> textR >> textG >> textB;
 
             // Set up font params
-            // TODO: This path will likely need to be changed before turning the project in ---------------------------------------------------------------------------------
-            font.loadFromFile("./src/" + fontFile);
+            font.loadFromFile(filePathPrefix + fontFile);
             fontSize = (int)fileFontSize;
             textColor = sf::Color((int)textR, (int)textG, (int)textB);
 
