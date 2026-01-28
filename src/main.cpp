@@ -202,8 +202,7 @@ int main()
 {
     // Main class variables
     sf::Vector2u windowSize;
-
-    // TODO: This will likely need to be changed before turning in the project -----------------------------------------------------------
+    
     std::string filePathPrefix = ""; // Assumed prefix for file loading
 
     sf::Font font;
