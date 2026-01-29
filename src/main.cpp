@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream> 
 #include <sstream> 
+#include <vector> 
 
 enum class ShapeType { RECTANGLE, CIRCLE }; // Enum class for shape type flags
 
@@ -191,8 +192,24 @@ void Shape::Render(sf::RenderWindow& l_window)
 int main()
 {
     // variables 
+    // window 
     unsigned int windowWidth;
     unsigned int windowHeight;
+    // font 
+    unsigned int fontSize;
+    unsigned int R, G, B;
+    sf::Font font;
+    std::string fontName; 
+    // shapes
+    std::string shapeName;
+    float posX;
+    float posY;
+    float speedX;
+    float speedY;
+    float radius;
+    float rectangleWidth;
+    float rectangleHeight; 
+    std::vector<Shape> shapes; // makes shapes vector 
 
     // open config.txt and pass the fle path into the constructor 
     std::ifstream ConfigFile("./src/config.txt");
@@ -231,6 +248,37 @@ int main()
             // can also write iss >> windowWidth >> windowHeight. can chain. 
         }
 
+        
+        if(type == "Font")
+        {
+            iss >> fontName;
+            iss >> fontSize;
+            iss >> R >> G >> B; 
+            // Load font and set up static text parameters immediately
+            if (!font.loadFromFile("./src/" + fontName))
+            {
+                std::cerr << "Failed to load font: " << fontName << "\n";
+            }
+            Shape::SetupText(font, sf::Color(R, G, B), fontSize);
+        }
+
+        // every time there's a 'Circle', it adds a new shape 
+        if(type == "Circle")
+        {
+            iss >> shapeName >> posX >> posY >> speedX >> speedY >> R >> G >> B >> radius;
+
+            shapes.push_back(Shape(shapeName, sf::Vector2f(posX, posY), sf::Vector2f(speedX, speedY), sf::Color(R, G, B), radius));
+
+        }
+
+        if(type == "Rectangle")
+        {
+            iss >> shapeName >> posX >> posY >> speedX >> speedY >> R >> G >> B >> rectangleWidth >> rectangleHeight;
+
+            shapes.push_back(Shape(shapeName, sf::Vector2f(posX, posY), sf::Vector2f(speedX, speedY), sf::Color(R, G, B), sf::Vector2f(rectangleWidth, rectangleHeight)));
+
+        }
+        
 
     }
 
@@ -238,10 +286,8 @@ int main()
     sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "Game 01");
     window.setFramerateLimit(60);
 
-    // font 
-    sf::Font font;
-    font.loadFromFile("./src/freeSans.ttf");
-    Shape::SetupText(font, sf::Color::White, 12); // IMPORTANT!!! the static method SetupText() NEEDS to be run BEFORE any shape objects are instantiated, otherwise text will not work.
+
+    // IMPORTANT!!! the static method SetupText() NEEDS to be run BEFORE any shape objects are instantiated, otherwise text will not work.
 
     /*
         Shape constructor guide:
@@ -252,8 +298,13 @@ int main()
         The constructor is overloaded so it will automatically make a rect or a circle depending on whether you pass it a float vector or a single float.
     */
 
-    Shape rect1("Rectangle", sf::Vector2f(100, 100), sf::Vector2f(-2, 2), sf::Color(255, 0, 0), sf::Vector2f(100, 100));
-    Shape circ1("Circle", sf::Vector2f(100, 100), sf::Vector2f(3, -4), sf::Color(0, 0, 255), 100);
+
+
+    // rectangles 
+    // Shape rect1("Rectangle", sf::Vector2f(100, 100), sf::Vector2f(-2, 2), sf::Color(255, 0, 0), sf::Vector2f(100, 100));
+
+    // circles 
+    // Shape circ1("Circle", sf::Vector2f(100, 100), sf::Vector2f(3, -4), sf::Color(0, 0, 255), 100);
 
     while(window.isOpen())
     {
@@ -268,15 +319,20 @@ int main()
             }
         }
 
-        rect1.Update(window);
-        circ1.Update(window);
-
-        window.clear();
+        // rect1.Update(window);
+        // circ1.Update(window);
 
         // Draw here
-        rect1.Render(window);
-        circ1.Render(window);
-        
+        // rect1.Render(window);
+        // circ1.Render(window);
+
+        window.clear();
+        for(auto& shape : shapes)
+        {
+            shape.Update(window);
+            shape.Render(window);
+        }
+
         window.display();
     }
 }
