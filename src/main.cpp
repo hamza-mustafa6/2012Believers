@@ -1,4 +1,7 @@
 #include <SFML/Graphics.hpp>
+#include <iostream>
+#include <fstream> 
+#include <sstream> 
 
 enum class ShapeType { RECTANGLE, CIRCLE }; // Enum class for shape type flags
 
@@ -187,11 +190,57 @@ void Shape::Render(sf::RenderWindow& l_window)
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(640, 480), "Game 01");
+    // variables 
+    unsigned int windowWidth;
+    unsigned int windowHeight;
+
+    // open config.txt and pass the fle path into the constructor 
+    std::ifstream ConfigFile("./src/config.txt");
+    std::string text;
+    
+    // close program if cannot find config file 
+    if(!ConfigFile.is_open())
+    {
+        std::cerr << "Could not open config file. \n";
+        return -1; 
+    }
+
+    // reading the config file
+    while(std::getline(ConfigFile, text))
+    {
+        // if the text is space or // skip 
+        // if 'Window' set window width and height 
+        // if 'Circle' set circle parameters 
+        // if 'Rectangle' set rectangle parameters 
+
+        // if a space of a comment, skip 
+        if(text.empty() || text[0] == '/')
+        {
+            continue;
+        }
+
+        // window width and height 
+        std::istringstream iss(text); // 
+        std::string type;
+        iss >> type; // >> skips whitespace / tabs and reads chars until tab. auto converts to target type 
+
+        if(type == "Window")
+        {
+            iss >> windowWidth;
+            iss >> windowHeight; 
+            // can also write iss >> windowWidth >> windowHeight. can chain. 
+        }
+
+
+    }
+
+    // window size 
+    sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "Game 01");
     window.setFramerateLimit(60);
 
+    // font 
     sf::Font font;
-    font.loadFromFile("./src/montserrat.ttf");
+    font.loadFromFile("./src/freeSans.ttf");
     Shape::SetupText(font, sf::Color::White, 12); // IMPORTANT!!! the static method SetupText() NEEDS to be run BEFORE any shape objects are instantiated, otherwise text will not work.
 
     /*
