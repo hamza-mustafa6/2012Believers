@@ -5,11 +5,7 @@
 
 enum class ShapeType { RECTANGLE, CIRCLE }; // Enum class for shape type flags
 
-/*
-    Shape Class Header
-
-    @Author Alex
-*/
+// Shape Class Header -------------------------------------------------------------------------------------------------
 class Shape
 {  
     public:
@@ -46,9 +42,7 @@ class Shape
 };
 
 /*
-    Shape Class Methods
-
-    @Author Alex
+    Shape Class Methods ----------------------------------------------------------------------------------------------
 */
 sf::Font Shape::s_font;
 sf::Color Shape::s_textColor;
@@ -190,19 +184,14 @@ void Shape::Render(sf::RenderWindow& l_window)
     l_window.draw(m_content);
 }
 
-
-/*
-    Main Class
-
-    @Author Alex
-*/
 using ShapeList = std::vector<Shape>;
 
+// Main Class --------------------------------------------------------------------------------------------------------------
 int main()
 {
     // Main class variables
     sf::Vector2u windowSize;
-    
+
     std::string filePathPrefix = ""; // Assumed prefix for file loading
 
     sf::Font font;
@@ -283,7 +272,7 @@ int main()
             textColor = sf::Color((int)textR, (int)textG, (int)textB);
 
             // Call the Shape class text "constructor" method
-            Shape::SetupText(font, textColor, fontSize); // Almost crashed out because i forgot you need to call this *before* initializing shape objects
+            Shape::SetupText(font, textColor, fontSize);
         }
 
         if (readWord == "Circle")
